@@ -10,14 +10,12 @@ const Slider = () => {
 
   const byDateDesc = data?.focus?.sort((evtA, evtB) =>
     new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
-  ); // ajout de -1 à lenght pour eviter que l'index depasse 2
-
+  );
   const nextCard = () => {
     setTimeout(
-      () => setIndex(index < byDateDesc.length - 1 ? index + 1 : 0),
+      () => setIndex(index + 1 < byDateDesc?.length ? index + 1 : 0),
       5000
     );
-    // console.log(`voici l'index avec use effect`, index);
   };
   useEffect(() => {
     nextCard();
@@ -47,13 +45,8 @@ const Slider = () => {
                   key={e.title}
                   type="radio"
                   name="radio-button"
-                  // modification de l'index pour suivre le slider
                   checked={index === radioIdx}
-                  onChange={() => {
-                    setIndex(radioIdx);
-
-                    // console.log(`voici l'index avec le clic du bouton`, index);
-                  }}
+                  readOnly
                 />
               ))}
             </div>

@@ -13,42 +13,23 @@ const EventList = () => {
   const { data, error } = useData();
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  // const filteredEvents = (
-  //   (!type
-  //     ? data?.events
-  //     : data?.events) || []
-  // ).filter((event, index) => {
-  //   if (
-  //     (currentPage - 1) * PER_PAGE <= index &&
-  //     PER_PAGE * currentPage > index
-  //   ) {
-  //     return true;
-  //   }
-  //   return false;
-  // });
-  const filteredEvents = (
-  data?.events || []
-).filter((event, index) => {
-  // Filtrer les événements en fonction du type sélectionné (si présent)
-  if (!type || event.type === type) {
-    // Vérifier si l'événement se situe dans la plage de pagination actuelle
-    if (
-      (currentPage - 1) * PER_PAGE <= index &&
-      PER_PAGE * currentPage > index
-    ) {
-      return true; // Conserver l'événement s'il satisfait les critères
+  const evtByType = data?.events?.filter((e) => e.type === type);
+  const filteredEvents = ((!type ? data?.events : evtByType) || []).filter(
+    (event, index) => {
+      if (
+        (currentPage - 1) * PER_PAGE <= index &&
+        PER_PAGE * currentPage > index
+      ) {
+        return true;
+      }
+      return false;
     }
-  }
-  return false; // Ne pas conserver l'événement s'il ne satisfait pas les critères
-});
+  );
 
-  console.log('Filtre',filteredEvents)
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
-    console.log(evtType)
   };
-  console.log('données',data)
   const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
   return (
@@ -61,9 +42,7 @@ const EventList = () => {
           <h3 className="SelectTitle">Catégories</h3>
           <Select
             selection={Array.from(typeList)}
-            onChange={(value) =>{ console.log("evenement value",value)
-              return value ? changeType(value) : changeType(null)
-              } }
+            onChange={(value) => (value ? changeType(value) : changeType(null))}
           />
           <div id="events" className="ListContainer">
             {filteredEvents.map((event) => (
