@@ -23,8 +23,12 @@ export const DataProvider = ({ children }) => {
   const getData = useCallback(async () => {
     try {
       const response = await api.loadData();
+      const byDateDesc = response?.events?.sort((evtA, evtB) =>
+        new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+      );
+
       setData(response);
-      setLast(response.events[response.events.length - 1]);
+      setLast(byDateDesc[byDateDesc.length - 1]);
     } catch (err) {
       setError(err);
     }

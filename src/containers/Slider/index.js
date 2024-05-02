@@ -7,19 +7,30 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
+  const [autoNext, setAutoNext] = useState(true);
 
   const byDateDesc = data?.focus?.sort((evtA, evtB) =>
     new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
   );
-  const nextCard = () => {
-    setTimeout(
-      () => setIndex(index + 1 < byDateDesc?.length ? index + 1 : 0),
-      5000
-    );
+  const handleRadioChange = (radioIdx) => {
+    setAutoNext(false); // Désactive le défilement automatique lorsqu'un bouton radio est sélectionné
+    setIndex(radioIdx); // Met à jour l'index avec l'index du bouton radio sélectionné
   };
   useEffect(() => {
-    nextCard();
-  });
+    const timeoutId = setTimeout(() => {
+      if (autoNext) {
+        setIndex((prevIndex) =>
+          prevIndex + 1 < byDateDesc?.length ? prevIndex + 1 : 0
+        );
+      }
+    }, 5000);
+
+    return () => {
+      clearTimeout(timeoutId);
+
+      setAutoNext(true);
+    };
+  }, [index, autoNext, byDateDesc]);
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
@@ -45,8 +56,8 @@ const Slider = () => {
                   key={e.title}
                   type="radio"
                   name="radio-button"
-                  checked={index === radioIdx}
-                  readOnly
+                  onChange={() => handleRadioChange(radioIdx)}
+                  checked={radioIdx === index}
                 />
               ))}
             </div>
