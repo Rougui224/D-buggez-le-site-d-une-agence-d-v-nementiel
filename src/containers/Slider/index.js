@@ -10,7 +10,7 @@ const Slider = () => {
   const [autoNext, setAutoNext] = useState(true);
 
   const byDateDesc = data?.focus?.sort((evtA, evtB) =>
-    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+    new Date(evtA.date) < new Date(evtB.date) ? 1 : -1
   );
   const handleRadioChange = (radioIdx) => {
     setAutoNext(false); // Désactive le défilement automatique lorsqu'un bouton radio est sélectionné
